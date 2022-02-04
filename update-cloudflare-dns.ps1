@@ -8,7 +8,7 @@ if (!(Test-Path $File_LOG)) {
   New-Item -ItemType File -Path $PSScriptRoot -Name ($FileName) | Out-Null
 }
 
-Clear-Content "update-cloudflare-dns.log"
+Clear-Content $File_LOG
 $DATE = Get-Date -UFormat "%Y/%m/%d %H:%M:%S"
 Write-Output "==> $DATE" | Tee-Object $File_LOG -Append
 
