@@ -15,14 +15,6 @@
 *   DNS Record must be pre created (api-token should only edit dns records)
 *   Enabled running unsigned PowerShell
 
-Start Windows PowerShell with the "Run as Administrator" option and execute this command
-
-```powershell
-set-executionpolicy remotesigned
-```
-
-Choose __A__ for __all__
-
 ## Installation
 
 [Download the DDNS-Cloudflare-PowerShell zip file](https://github.com/fire1ce/DDNS-Cloudflare-PowerShell/archive/refs/heads/main.zip) & Unzip,
@@ -51,27 +43,36 @@ Update the config parameters at updateDNS.ps1 by editing the file
 
 ## Running The Script
 
-Right click on _update-cloudflare-dns_conf.ps1_ click __Run with PowerShell__
+Open cmd/powershell
+
+Example:
+
+```bash
+powershell.exe -ExecutionPolicy Bypass -File C:\DDNS-Cloudflare-PowerShell\update-cloudflare-dns.ps1
+```
 
 ## Automation With Windows Task Scheduler
 
-Run At boot Example with the updateDNS.ps1 C:\updateDNS.ps1:
+Example:
+Run at boot with 1 min delay and repeat every 1 min
 
 * Open Task Scheduler
 * Action -> Crate Task
 * __General Menu__
-    * Name: updateDNS
+    * Name: update-cloudflare-dns
     * Run whether user is logged on or not
 * __Trigger__
     * New...
     * Begin the task: At startup
-    * Delay Task for: 1 minute
+    * Delay task for: 1 minute
+    * Repeat task every: 1 minute
+    * for duration of: indefinitely
     * Enabled
 * __Actions__
     * New...
     * Action: Start a Program
     * Program/script: _C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe_
-    * Add arguments (optional): _-File C:\DDNS-Cloudflare-PowerShell\update-cloudflare-dns.ps1_
+    * Add arguments: _-ExecutionPolicy Bypass -File C:\DDNS-Cloudflare-PowerShell\update-cloudflare-dns.ps1_
     * ok
     * Enter your user's password when prompted
 
