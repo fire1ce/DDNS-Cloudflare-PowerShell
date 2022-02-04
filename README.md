@@ -75,6 +75,8 @@ Run at boot with 1 min delay and repeat every 1 min
     * Add arguments: _-ExecutionPolicy Bypass -File C:\DDNS-Cloudflare-PowerShell\update-cloudflare-dns.ps1_
     * ok
     * Enter your user's password when prompted
+* __Conditions__
+    * Power: Uncheck - [x] Start the task only if the computer is on AC power
 
 ## Logs
 
