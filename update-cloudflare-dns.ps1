@@ -58,8 +58,7 @@ if ($what_ip -eq 'external') {
 
 ### Get Internal ip from primary interface
 if ($what_ip -eq 'internal') {
-  $default_interface = (Get-NetIPInterface -AddressFamily IPv4 -ConnectionState Connected | Sort-Object -Property InterfaceMetric | Select-Object -First 1).ifIndex
-  $ip = (Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $default_interface).IPAddress.Trim()
+  $ip = $((Find-NetRoute -RemoteIPAddress 1.1.1.1).IPAddress|out-string).Trim()
   if (!([bool]$ip) -or ($ip -eq "127.0.0.1")) {
     Write-Output "==>Error! Can't get internal ip address" | Tee-Object $File_LOG -Append
     Exit
