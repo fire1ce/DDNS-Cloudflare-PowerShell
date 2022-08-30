@@ -15,7 +15,7 @@
 - DNS Record must be pre created (api-token should only edit dns records)
 - Enabled running unsigned PowerShell
 
-### Creating a Cloudflare API token
+### Creating Cloudflare API token
 
 To create a CloudFlare API token for your DNS zone go to [https://dash.cloudflare.com/profile/api-tokens][cloudflare-api-token-url] and follow these steps:
 
