@@ -167,8 +167,6 @@ if ($notify_me_discord -eq "yes") {
     try {
       Invoke-RestMethod @discord_notification
     } catch {
-      # Dig into the exception to get the Response details.
-      # Note that value__ is not a typo.
       Write-Host "==> Discord notification request failed. Here are the details for the exception:" | Tee-Object $File_LOG -Append
       Write-Host "==> Request StatusCode:" $_.Exception.Response.StatusCode.value__  | Tee-Object $File_LOG -Append
       Write-Host "==> Request StatusDescription:" $_.Exception.Response.StatusDescription | Tee-Object $File_LOG -Append
