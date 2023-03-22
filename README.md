@@ -46,13 +46,21 @@ Update the config parameters at updateDNS.ps1 by editing the file
 | proxied                   | false            | Use Cloudflare proxy on dns record true/false             |
 | ttl                       | 120              | 120-7200 in seconds or 1 for Auto                         |
 
-### Optional Notifications Parameters
+### Optional Notifications Parameters for Telegram
 
 | **Option**             | **Example** | **Description**                   |
 | ---------------------- | ----------- | --------------------------------- |
 | notify_me_telegram     | yes         | Use Telegram notifications yes/no |
 | telegram_chat_id       | ChangeMe    | Chat ID of the bot                |
 | telegtam_bot_API_Token | ChangeMe    | Telegtam's Bot API Token          |
+
+### Optional Notification Parameters for Discord
+
+| **Option**             | **Example** | **Description**                       |
+| ---------------------- | ----------- | ------------------------------------- |
+| notify_me_discord      | yes         | Use Discord notifications yes/no      |
+| $discord_webhook_URL   | ChangeMe    | Webhook URL from your server settings |
+
 
 ## Running The Script
 
