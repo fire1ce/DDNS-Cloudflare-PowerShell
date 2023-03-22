@@ -20,3 +20,8 @@ $notify_me_telegram = "no"
 $telegram_chat_id = "ChangeMe"
 ## Telegram Bot API Key
 $telegram_bot_API_Token = "ChangeMe"
+
+## Discord Server Notifications yes/no (only sent if DNS is updated)
+$notify_me_discord = "no"
+## Discord Webhook URL (create a webhook on your Discord server via Server Settings > Integrations)
+$discord_webhook_URL = "ChangeMe"

@@ -139,7 +139,7 @@ Write-Output "==> Success!" | Tee-Object $File_LOG -Append
 Write-Output "==> $dns_record DNS Record Updated To: $ip, ttl: $ttl, proxied: $proxied" | Tee-Object $File_LOG -Append
 
 
-if ($notify_me_telegram -eq "no") {
+if ($notify_me_telegram -eq "no" -And $notify_me_discord -eq "no")   {
   Exit
 }
 
@@ -153,4 +153,25 @@ if ($notify_me_telegram -eq "yes") {
     Write-Output "Error! Telegram notification failed" | Tee-Object $File_LOG -Append
     Exit
   }
+}
+
+if ($notify_me_discord -eq "yes") { 
+  $discord_message = "$dns_record DNS Record Updated To: $ip (was $dns_record_ip)" 
+  $discord_payload = [PSCustomObject]@{content = $discord_message} | ConvertTo-Json
+  $discord_notification = @{
+    Uri    = $discord_webhook_URL
+    Method = 'POST'
+    Body = $discord_payload
+    Headers = @{ "Content-Type" = "application/json" }
+  }
+    try {
+      Invoke-RestMethod @discord_notification
+    } catch {
+      # Dig into the exception to get the Response details.
+      # Note that value__ is not a typo.
+      Write-Host "==> Discord notification request failed. Here are the details for the exception:" | Tee-Object $File_LOG -Append
+      Write-Host "==> Request StatusCode:" $_.Exception.Response.StatusCode.value__  | Tee-Object $File_LOG -Append
+      Write-Host "==> Request StatusDescription:" $_.Exception.Response.StatusDescription | Tee-Object $File_LOG -Append
+    }
+    Exit
 }
