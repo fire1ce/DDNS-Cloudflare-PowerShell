@@ -5,9 +5,9 @@
 
 - DDNS Cloudflare PowerShell script for **Windows**.
 - Choose any source IP address to update **external** or **internal** _(WAN/LAN)_.
-- For multiply lan interfaces like Wifi, Docker Networks and Bridges the script will automatically detects the primary Interface by priority.
-- Cloudflare's options proxy and TTL configurable via the parameters.
-- Optional Telegram Notifications
+- For multiple LAN interfaces like Wifi, Docker Networks and Bridges the script will automatically detect the primary Interface by priority.
+- Cloudflare's options for proxy and TTL configurable via the parameters.
+- Optional Telegram or Discord Notifications
 
 ## Requirements
 
@@ -31,17 +31,17 @@ To create a CloudFlare API token for your DNS zone go to [https://dash.cloudflar
 ## Installation
 
 [Download the DDNS-Cloudflare-PowerShell zip file](https://github.com/fire1ce/DDNS-Cloudflare-PowerShell/archive/refs/heads/main.zip) & Unzip,
-rename to folder to _DDNS-Cloudflare-PowerShell_ place in a directory of your choosing
+rename the folder to _DDNS-Cloudflare-PowerShell_ place in a directory of your choosing
 
 ## Config Parameters
 
-Update the config parameters at updateDNS.ps1 by editing the file
+Update the config parameters inside the update-cloudflare-dns_conf.ps1 by editing accordingly. See below for examples.
 
 | **Option**                | **Example**      | **Description**                                           |
 | ------------------------- | ---------------- | --------------------------------------------------------- |
 | what_ip                   | internal         | Which IP should be used for the record: internal/external |
 | dns_record                | ddns.example.com | DNS **A** record which will be updated                    |
-| cloudflare_zone_api_token | ChangeMe         | Cloudflare API Token **KEEP IT PRIVET!!!!**               |
+| cloudflare_zone_api_token | ChangeMe         | Cloudflare API Token **KEEP IT PRIVATE!!!!**               |
 | zoneid                    | ChangeMe         | Cloudflare's Zone ID                                      |
 | proxied                   | false            | Use Cloudflare proxy on dns record true/false             |
 | ttl                       | 120              | 120-7200 in seconds or 1 for Auto                         |
@@ -52,16 +52,16 @@ Update the config parameters at updateDNS.ps1 by editing the file
 | ---------------------- | ----------- | --------------------------------- |
 | notify_me_telegram     | yes         | Use Telegram notifications yes/no |
 | telegram_chat_id       | ChangeMe    | Chat ID of the bot                |
-| telegtam_bot_API_Token | ChangeMe    | Telegtam's Bot API Token          |
+| telegram_bot_API_Token | ChangeMe    | Telegram's Bot API Token          |
 
 ### Optional Notification Parameters for Discord
 
-| **Option**             | **Example** | **Description**                       |
-| ---------------------- | ----------- | ------------------------------------- |
-| notify_me_discord      | yes         | Use Discord notifications yes/no      |
-| $discord_webhook_URL   | ChangeMe    | Webhook URL from your server settings |
+| **Option**             | **Example**                  | **Description**                               |
+| ---------------------- | ---------------------------- | --------------------------------------------- |
+| notify_me_discord      | yes                          | Use Discord notifications yes/no              |
+| discord_webhook_URL    | http://WebhookURL.com/asd/   | Webhook URL from your Discord server settings |
 
-
+To generate a webhook URL, follow the [official Discord instructions](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks). 
 ## Running The Script
 
 Open cmd/powershell
