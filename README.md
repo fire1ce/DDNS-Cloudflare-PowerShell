@@ -110,10 +110,6 @@ Log file name:
 update-cloudflare-dns.log
 ```
 
-## Limitations
-
-- Does not support IPv6
-
 ## License
 
 ### MIT License
