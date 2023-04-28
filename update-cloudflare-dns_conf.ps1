@@ -15,7 +15,7 @@ $zoneid = "ChangeMe"
 $cloudflare_zone_api_token = "ChangeMe"
 ## Use Cloudflare proxy on dns record true/false
 $proxied = $false
-## 120-7200 in seconds or 1 for Auto
+## 60-7200 in seconds or 1 for Auto
 $ttl = 120
 
 ## Use proxy when connect to DoH, Cloudflare, Telegram or Discord API
