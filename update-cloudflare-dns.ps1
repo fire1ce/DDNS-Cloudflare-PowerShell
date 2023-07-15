@@ -66,7 +66,7 @@ function Get-Ip-Internal {
 
     if ($IsLinux) {
         if ($IPv6) {
-            return ip -6 addr | grep inet6 | awk -F '[ \t]+|/' '{print $3}' | grep -v ^::1 | grep -v ^f | head -1
+            return ip -6 addr | grep inet6 | awk -F '[ \t]+|/' '{print $3}' | grep -v ^::1 | grep -v ^f | sort | head -1
         }
         else {
             return ip -4 addr | grep inet | awk -F '[ \t]+|/' '{print $3}' | grep -v ^127 | grep -v ^192 | grep -v ^f | head -1
