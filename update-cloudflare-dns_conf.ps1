@@ -1,10 +1,27 @@
 ﻿##### Config
 
-## Which IP should be used for the record: internal/external
-## Internal interface will be chosen automaticly as a primary default interface
-$what_ip = "internal"
-## DNS A record to be updated
-$dns_record = "ddns.example.com"
+## DNS A record or records to be updated
+## Each record is required to have the the following:
+##   1. Which IP should be used for the record: internal/external
+##      Internal interface will be chosen automaticly as a primary default interface
+##   2. Record to update
+##   3. The proxied status
+##   4. cache time (60-7200 in seconds or 1 for Auto)
+$dns_records = [ordered]@{
+	record1 = @{
+		what_ip = "internal";
+		record = "ddns.example.com";
+		proxied = $true;
+		ttl = 1;
+	} #record 1 
+	record2 = @{
+		what_ip = "external";
+		record = "ddns2.example.com";
+		proxied = $false; 
+		ttl = 1;
+	} #record 2
+}
+	
 ## Use IPv6
 $IPv6 = $false
 ## if use DoH to query the current IP address
@@ -13,10 +30,6 @@ $DNS_over_HTTPS = $false
 $zoneid = "ChangeMe"
 ## Cloudflare Zone API Token
 $cloudflare_zone_api_token = "ChangeMe"
-## Use Cloudflare proxy on dns record true/false
-$proxied = $false
-## 60-7200 in seconds or 1 for Auto
-$ttl = 120
 
 ## Use proxy when connect to DoH, Cloudflare, Telegram or Discord API
 # $http_proxy = $null
