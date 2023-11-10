@@ -1,28 +1,5 @@
 # https://github.com/fire1ce/DDNS-Cloudflare-PowerShell
 
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-
-### updateDNS.log file of the last run for debug
-$File_LOG = "$PSScriptRoot\update-cloudflare-dns.log"
-$FileName = "update-cloudflare-dns.log"
-
-if (!(Test-Path $File_LOG)) {
-  New-Item -ItemType File -Path $PSScriptRoot -Name ($FileName) | Out-Null
-}
-
-Clear-Content $File_LOG
-$DATE = Get-Date -UFormat "%Y/%m/%d %H:%M:%S"
-Write-Output "==> $DATE" | Tee-Object $File_LOG -Append
-
-### Load config file
-Try {
-  . $PSScriptRoot\update-cloudflare-dns_conf.ps1
-}
-Catch {
-  Write-Output "==> Error! Missing update-cloudflare-dns_conf.ps1 or invalid syntax" | Tee-Object $File_LOG -Append
-  Exit
-}
-
 ### Get External ip from internet
 function Get-Ip-External {
     param ([bool] $IPv6)
@@ -84,6 +61,30 @@ function Resolve-DnsName-From-Cloudflare {
     }
 }
 
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+### updateDNS.log file of the last run for debug
+$File_LOG = "$PSScriptRoot\update-cloudflare-dns.log"
+$FileName = "update-cloudflare-dns.log"
+
+if (!(Test-Path $File_LOG)) {
+  New-Item -ItemType File -Path $PSScriptRoot -Name ($FileName) | Out-Null
+}
+
+Clear-Content $File_LOG
+$DATE = Get-Date -UFormat "%Y/%m/%d %H:%M:%S"
+Write-Output "==> $DATE" | Tee-Object $File_LOG -Append
+
+### Load config file
+Try {
+  . $PSScriptRoot\update-cloudflare-dns_conf.ps1
+}
+Catch {
+  Write-Output "==> Error! Missing update-cloudflare-dns_conf.ps1 or invalid syntax" | Tee-Object $File_LOG -Append
+  Exit
+}
+
+# Iterate across each of the keys in the hash table
 foreach($current_key in $dns_records.Keys){
 	
   # Set the variables for the current key
@@ -241,13 +242,13 @@ foreach($current_key in $dns_records.Keys){
       Body = $discord_payload
       Headers = @{ "Content-Type" = "application/json" }
     }
-      try {
-        Invoke-RestMethod -Proxy $http_proxy -ProxyCredential $proxy_credential @discord_notification
-      } catch {
-        Write-Host "==> Discord notification request failed. Here are the details for the exception:" | Tee-Object $File_LOG -Append
-        Write-Host "==> Request StatusCode:" $_.Exception.Response.StatusCode.value__  | Tee-Object $File_LOG -Append
-        Write-Host "==> Request StatusDescription:" $_.Exception.Response.StatusDescription | Tee-Object $File_LOG -Append
-      }
-      Continue
+    try {
+      Invoke-RestMethod -Proxy $http_proxy -ProxyCredential $proxy_credential @discord_notification
+    } catch {
+      Write-Host "==> Discord notification request failed. Here are the details for the exception:" | Tee-Object $File_LOG -Append
+      Write-Host "==> Request StatusCode:" $_.Exception.Response.StatusCode.value__  | Tee-Object $File_LOG -Append
+      Write-Host "==> Request StatusDescription:" $_.Exception.Response.StatusDescription | Tee-Object $File_LOG -Append
+    }
+    Continue
   }
 }
