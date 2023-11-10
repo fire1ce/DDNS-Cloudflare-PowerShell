@@ -1,20 +1,24 @@
 ﻿##### Config
 
-## Which IP should be used for the record: internal/external
-## Internal interface will be chosen automaticly as a primary default interface
-$what_ip = "internal"
 ## DNS A record or records to be updated
-## Each record is required to have the record to update, its proxied status, and cache time (60-7200 in seconds or 1 for Auto)
+## Each record is required to have the the following:
+##   1. Which IP should be used for the record: internal/external
+##      Internal interface will be chosen automaticly as a primary default interface
+##   2. Record to update
+##   3. The proxied status
+##   4. cache time (60-7200 in seconds or 1 for Auto)
 $dns_records = [ordered]@{
 	record1 = @{
+		what_ip = "internal";
 		record = "ddns.example.com";
 		proxied = $true;
 		ttl = 1;
 	} #record 1 
 	record2 = @{
-			record = "ddns2.example.com";
-			proxied = $false; 
-			ttl = 1;
+		what_ip = "external";
+		record = "ddns2.example.com";
+		proxied = $false; 
+		ttl = 1;
 	} #record 2
 }
 	

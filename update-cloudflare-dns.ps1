@@ -23,12 +23,6 @@ Catch {
   Exit
 }
 
-### Check validity of "what_ip" parameter
-if ( ($what_ip -ne "external") -and ($what_ip -ne "internal") ) {
-  Write-Output 'Error! Incorrect "what_ip" parameter choose "external" or "internal"' | Tee-Object $File_LOG -Append
-  Exit
-}
-
 ### Get External ip from internet
 function Get-Ip-External {
     param ([bool] $IPv6)
@@ -37,14 +31,6 @@ function Get-Ip-External {
     } else {
         return (Invoke-RestMethod -Uri "https://checkip.amazonaws.com" -TimeoutSec 10).Trim()
     }
-}
-if ($what_ip -eq 'external') {
-  $ip = Get-Ip-External -IPv6 $IPv6
-  if (!([bool]$ip)) {
-    Write-Output "Error! Can't get external ip from https://checkip.amazonaws.com" | Tee-Object $File_LOG -Append
-    Exit
-  }
-  Write-Output "==> External IP is: $ip" | Tee-Object $File_LOG -Append
 }
 
 ### Get Internal ip from primary interface
@@ -72,15 +58,6 @@ function Get-Ip-Internal {
         throw "Get-Internal-IpAddress is not implemented for MacOS."
     }
 }
-if ($what_ip -eq 'internal') {
-  $ip = Get-Ip-Internal -IPv6 $IPv6
-  if (![bool]$ip) {
-    Write-Output "==>Error! Can't get internal ip address" | Tee-Object $File_LOG -Append
-    Exit
-  }
-  Write-Output "==> Internal IP is $ip" | Tee-Object $File_LOG -Append
-}
-
 
 ### Get IP address of DNS record from 1.1.1.1 DNS server when proxied is "false"
 function Resolve-DnsName-From-Cloudflare {
@@ -106,28 +83,27 @@ function Resolve-DnsName-From-Cloudflare {
         return $null
     }
 }
-if ($proxied -eq $false) {
-  $dns_record_ip = Resolve-DnsName-From-Cloudflare -DoH $DNS_over_HTTPS -domain $dns_record -IPv6 $IPv6
-  if (![bool]$dns_record_ip) {
-    Write-Output "Error! Can't resolve the ${dns_record} via 1.1.1.1 DNS server" | Tee-Object $File_LOG -Append
-    Exit
-  }
-  $is_proxed = $proxied
-}
 
 foreach($current_key in $dns_records.Keys){
 	
   # Set the variables for the current key
   $a_record = $dns_records[$current_key]
+  $what_ip = $a_record['what_ip']
   $dns_record = $a_record['record']
   $proxied = $a_record['proxied']
   $ttl = $a_record['ttl']
   
   Write-Output "Checking $dns_record before processing..." | Tee-Object $File_LOG -Append
 
-  ### Check validity of "ttl" parameter
-  if (( $ttl -lt 60 ) -or ($ttl -gt 7200 ) -and ( $ttl -ne 1 )) {
-    Write-Output 'Error! ttl out of range (60) or not set to 1' | Tee-Object $File_LOG -Append
+  ### Check validity of "what_ip" parameter
+  if ( ($what_ip -ne "external") -and ($what_ip -ne "internal") ) {
+    Write-Output 'Error! Incorrect "what_ip" parameter choose "external" or "internal"' | Tee-Object $File_LOG -Append
+    Exit
+  }
+
+  ### Check validity of "record" parameter
+  if (!([string]$dns_record) -or $null -eq $dns_record) {
+    Write-Output 'Error! Need to provide the dns entry to update ' | Tee-Object $File_LOG -Append
     Continue
   }
 
@@ -137,7 +113,35 @@ foreach($current_key in $dns_records.Keys){
     Continue
   }
 
+  ### Check validity of "ttl" parameter
+  if (( $ttl -lt 60 ) -or ($ttl -gt 7200 ) -and ( $ttl -ne 1 )) {
+    Write-Output 'Error! ttl out of range (60) or not set to 1' | Tee-Object $File_LOG -Append
+    Continue
+  }
+
   Write-Output "Passed checks, processing $dns_record..." | Tee-Object $File_LOG -Append
+
+  ### Variables to hold values from the various if/functions 
+  $ip = $null
+  $dns_record_ip = $null
+  $is_proxied = $null
+
+  if ($what_ip -eq 'external') {
+    $ip = Get-Ip-External -IPv6 $IPv6
+    if (!([bool]$ip)) {
+      Write-Output "Error! Can't get external ip from https://checkip.amazonaws.com" | Tee-Object $File_LOG -Append
+      Exit
+    }
+    Write-Output "==> External IP is: $ip" | Tee-Object $File_LOG -Append
+  }
+  elseif ($what_ip -eq 'internal') {
+    $ip = Get-Ip-Internal -IPv6 $IPv6
+    if (![bool]$ip) {
+      Write-Output "==>Error! Can't get internal ip address" | Tee-Object $File_LOG -Append
+      Exit
+    }
+    Write-Output "==> Internal IP is $ip" | Tee-Object $File_LOG -Append
+  }
 
   ### Get the dns record id and current proxy status from cloudflare's api when proxied is "true"
   if ($proxied -eq $true) {
@@ -150,12 +154,20 @@ foreach($current_key in $dns_records.Keys){
     if ($response.success -ne "True") {
       Write-Output "Error! Can't get dns record info from cloudflare's api" | Tee-Object $File_LOG -Append
     }
-    $is_proxed = $response.result.proxied
+    $is_proxied = $response.result.proxied
     $dns_record_ip = $response.result.content.Trim()
+  }
+  elseif ($proxied -eq $false) {
+    $dns_record_ip = Resolve-DnsName-From-Cloudflare -DoH $DNS_over_HTTPS -domain $dns_record -IPv6 $IPv6
+    if (![bool]$dns_record_ip) {
+      Write-Output "Error! Can't resolve the ${dns_record} via 1.1.1.1 DNS server" | Tee-Object $File_LOG -Append
+      Exit
+    }
+    $is_proxied = $proxied
   }
 
   ### Check if ip or proxy have changed
-  if (($dns_record_ip -eq $ip) -and ($is_proxed -eq $proxied)) {
+  if (($dns_record_ip -eq $ip) -and ($is_proxied -eq $proxied)) {
     Write-Output "==> DNS record IP of $dns_record is $dns_record_ip, no changes needed. Exiting..." | Tee-Object $File_LOG -Append
     Continue
   }
