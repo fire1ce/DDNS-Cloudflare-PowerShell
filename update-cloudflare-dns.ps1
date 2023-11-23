@@ -181,6 +181,7 @@ $update_dns_record = @{
     "content" = $ip
     "ttl"     = $ttl
     "proxied" = $proxied
+    "comment" = $comment
   } | ConvertTo-Json
 }
 

@@ -37,14 +37,15 @@ rename the folder to _DDNS-Cloudflare-PowerShell_ place in a directory of your c
 
 Update the config parameters inside the update-cloudflare-dns_conf.ps1 by editing accordingly. See below for examples.
 
-| **Option**                | **Example**      | **Description**                                           |
-| ------------------------- | ---------------- | --------------------------------------------------------- |
-| what_ip                   | internal         | Which IP should be used for the record: internal/external |
-| dns_record                | ddns.example.com | DNS **A** record which will be updated                    |
-| cloudflare_zone_api_token | ChangeMe         | Cloudflare API Token **KEEP IT PRIVATE!!!!**               |
-| zoneid                    | ChangeMe         | Cloudflare's Zone ID                                      |
-| proxied                   | false            | Use Cloudflare proxy on dns record true/false             |
-| ttl                       | 120              | 120-7200 in seconds or 1 for Auto                         |
+| **Option**                | **Example**                              | **Description**                                           |
+| ------------------------- | ---------------------------------------- | --------------------------------------------------------- |
+| what_ip                   | internal                                 | Which IP should be used for the record: internal/external |
+| dns_record                | ddns.example.com                         | DNS **A** record which will be updated                    |
+| cloudflare_zone_api_token | ChangeMe                                 | Cloudflare API Token **KEEP IT PRIVATE!!!!**              |
+| zoneid                    | ChangeMe                                 | Cloudflare's Zone ID                                      |
+| proxied                   | false                                    | Use Cloudflare proxy on dns record true/false             |
+| ttl                       | 120                                      | 120-7200 in seconds or 1 for Auto                         |
+| comment                   | Updated using DDNS-Cloudflare-PowerShell | For record keeping, no effect on DNS itself               |
 
 ### Optional Notifications Parameters for Telegram
 

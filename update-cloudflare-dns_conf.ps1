@@ -15,6 +15,8 @@ $zoneid = "ChangeMe"
 $cloudflare_zone_api_token = "ChangeMe"
 ## Use Cloudflare proxy on dns record true/false
 $proxied = $false
+## Comment to put on the updated record
+$comment = "Updated using DDNS-Cloudflare-PowerShell"
 ## 60-7200 in seconds or 1 for Auto
 $ttl = 120
 
