@@ -154,7 +154,7 @@ Write-Output "==> DNS record of $dns_record is: $dns_record_ip. Trying to update
 
 ### Get the dns record information from cloudflare's api
 $cloudflare_record_info = @{
-  Uri     = "https://api.cloudflare.com/client/v4/zones/$zoneid/dns_records?name=$dns_record"
+  Uri     = "https://api.cloudflare.com/client/v4/zones/$zoneid/dns_records?name=$dns_record&type=$type"
   Headers = @{"Authorization" = "Bearer $cloudflare_zone_api_token"; "Content-Type" = "application/json" }
 }
 
