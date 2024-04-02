@@ -2,21 +2,21 @@
 
 ## Which IP should be used for the record: internal/external
 ## Internal interface will be chosen automaticly as a primary default interface
-$what_ip = "internal"
+$what_ip = "external"
 ## DNS A record to be updated
 $dns_record = "ddns.example.com"
 ## Use IPv6
 $IPv6 = $false
 ## if use DoH to query the current IP address
 $DNS_over_HTTPS = $false
-## Cloudflare's Zone ID
+## Cloudflare's Zone ID - Cloudflare Dashboard -> Websites -> example.com -> Overview -> API Zone ID on right-hand sidebar
 $zoneid = "ChangeMe"
-## Cloudflare Zone API Token
+## Cloudflare Zone API Token - Instructions: https://github.com/fire1ce/DDNS-Cloudflare-PowerShell/blob/main/README.md#creating-cloudflare-api-token
 $cloudflare_zone_api_token = "ChangeMe"
 ## Use Cloudflare proxy on dns record true/false
 $proxied = $false
 ## Comment to put on the updated record
-$comment = "Updated using DDNS-Cloudflare-PowerShell"
+$comment = "Updated with fire1ce's DDNS-Cloudflare-PowerShell script $((Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ'))"
 ## 60-7200 in seconds or 1 for Auto
 $ttl = 120
 
