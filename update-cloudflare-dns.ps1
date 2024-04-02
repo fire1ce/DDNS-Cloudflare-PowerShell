@@ -160,7 +160,7 @@ $cloudflare_record_info = @{
 
 $cloudflare_record_info_resposne = Invoke-RestMethod -Proxy $http_proxy -ProxyCredential $proxy_credential @cloudflare_record_info
 if ($cloudflare_record_info_resposne.success -ne "True") {
-  Write-Output "Error! Can't get $dns_record record inforamiton from cloudflare API" | Tee-Object $File_LOG -Append
+  Write-Output "Error! Can't get $dns_record record information from cloudflare API" | Tee-Object $File_LOG -Append
   Exit
 }
 
@@ -192,7 +192,7 @@ if ($update_dns_record_response.success -ne "True") {
 }
 
 Write-Output "==> Success!" | Tee-Object $File_LOG -Append
-Write-Output "==> $dns_record DNS Record Updated To: $ip, ttl: $ttl, proxied: $proxied" | Tee-Object $File_LOG -Append
+Write-Output "==> $dns_record DNS Record Updated To: $ip, ttl: $ttl, proxied: $proxied. `ncomment: $comment" | Tee-Object $File_LOG -Append
 
 
 if ($notify_me_telegram -eq "no" -And $notify_me_discord -eq "no")   {
