@@ -108,7 +108,7 @@ $cloudflare_record_info = @{
 
 $cloudflare_record_info_resposne = Invoke-RestMethod @cloudflare_record_info
 if ($cloudflare_record_info_resposne.success -ne "True") {
-  Write-Output "Error! Can't get $dns_record record inforamiton from cloudflare API" | Tee-Object $File_LOG -Append
+  Write-Output "Error! Can't get $dns_record record information from cloudflare API" | Tee-Object $File_LOG -Append
   Exit
 }
 
@@ -126,6 +126,7 @@ $update_dns_record = @{
     "content" = $ip
     "ttl"     = $ttl
     "proxied" = $proxied
+    "comment" = $comment
   } | ConvertTo-Json
 }
 
@@ -143,10 +144,15 @@ if ($notify_me_telegram -eq "no" -And $notify_me_discord -eq "no")   {
   Exit
 }
 
+$notify_message = "$dns_record DNS Record Updated To: $ip (was $dns_record_ip)" 
+
 if ($notify_me_telegram -eq "yes") {
   $telegram_notification = @{
-    Uri    = "https://api.telegram.org/bot$telegram_bot_API_Token/sendMessage?chat_id=$telegram_chat_id&text=$dns_record DNS Record Updated To: $ip"
+    Uri    = "https://api.telegram.org/bot$telegram_bot_API_Token/sendMessage?chat_id=$telegram_chat_id&text=$notify_message"
     Method = 'GET'
+  }
+  if ($notify_with_proxy -eq "yes") {
+    $telegram_notification.Proxy = $notify_proxy_URL
   }
   $telegram_notification_response = Invoke-RestMethod @telegram_notification
   if ($telegram_notification_response.ok -ne "True") {
@@ -156,20 +162,22 @@ if ($notify_me_telegram -eq "yes") {
 }
 
 if ($notify_me_discord -eq "yes") { 
-  $discord_message = "$dns_record DNS Record Updated To: $ip (was $dns_record_ip)" 
-  $discord_payload = [PSCustomObject]@{content = $discord_message} | ConvertTo-Json
+  $discord_payload = [PSCustomObject]@{content = $notify_message} | ConvertTo-Json
   $discord_notification = @{
     Uri    = $discord_webhook_URL
     Method = 'POST'
     Body = $discord_payload
     Headers = @{ "Content-Type" = "application/json" }
   }
-    try {
-      Invoke-RestMethod @discord_notification
-    } catch {
-      Write-Host "==> Discord notification request failed. Here are the details for the exception:" | Tee-Object $File_LOG -Append
-      Write-Host "==> Request StatusCode:" $_.Exception.Response.StatusCode.value__  | Tee-Object $File_LOG -Append
-      Write-Host "==> Request StatusDescription:" $_.Exception.Response.StatusDescription | Tee-Object $File_LOG -Append
-    }
-    Exit
+  if ($notify_with_proxy -eq "yes") {
+    $discord_notification.Proxy = $notify_proxy_URL
+  }
+  try {
+    Invoke-RestMethod @discord_notification
+  } catch {
+    Write-Host "==> Discord notification request failed. Here are the details for the exception:" | Tee-Object $File_LOG -Append
+    Write-Host "==> Request StatusCode:" $_.Exception.Response.StatusCode.value__  | Tee-Object $File_LOG -Append
+    Write-Host "==> Request StatusDescription:" $_.Exception.Response.StatusDescription | Tee-Object $File_LOG -Append
+  }
+  Exit
 }
