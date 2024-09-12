@@ -13,6 +13,8 @@ $cloudflare_zone_api_token = "ChangeMe"
 $proxied = $false
 ## 120-7200 in seconds or 1 for Auto
 $ttl = 120
+## DNS record comment
+$comment = ""
 
 ## Telegram Notifications yes/no (only sent if DNS is updated)
 $notify_me_telegram = "no"
@@ -25,3 +27,8 @@ $telegram_bot_API_Token = "ChangeMe"
 $notify_me_discord = "no"
 ## Discord Webhook URL (create a webhook on your Discord server via Server Settings > Integrations)
 $discord_webhook_URL = "ChangeMe"
+
+## Notifications with Proxy yes/no
+$notify_with_proxy = "no"
+## HTTP Proxy URL
+$notify_proxy_URL = "ChangeMe"

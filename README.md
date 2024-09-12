@@ -7,7 +7,7 @@
 - Choose any source IP address to update **external** or **internal** _(WAN/LAN)_.
 - For multiple LAN interfaces like Wifi, Docker Networks and Bridges the script will automatically detect the primary Interface by priority.
 - Cloudflare's options for proxy and TTL configurable via the parameters.
-- Optional Telegram or Discord Notifications
+- Optional Telegram or Discord Notifications (Can be Proxied)
 
 ## Requirements
 
@@ -31,7 +31,7 @@ To create a CloudFlare API token for your DNS zone go to [https://dash.cloudflar
 ## Installation
 
 [Download the DDNS-Cloudflare-PowerShell zip file](https://github.com/fire1ce/DDNS-Cloudflare-PowerShell/archive/refs/heads/main.zip) & Unzip,
-rename the folder to _DDNS-Cloudflare-PowerShell_ place in a directory of your choosing
+rename the folder to _DDNS-Cloudflare-PowerShell_ place in a directory of your choosing (e.g. _C:\DDNS-Cloudflare-PowerShell_)
 
 ## Config Parameters
 
@@ -41,10 +41,11 @@ Update the config parameters inside the update-cloudflare-dns_conf.ps1 by editin
 | ------------------------- | ---------------- | --------------------------------------------------------- |
 | what_ip                   | internal         | Which IP should be used for the record: internal/external |
 | dns_record                | ddns.example.com | DNS **A** record which will be updated                    |
-| cloudflare_zone_api_token | ChangeMe         | Cloudflare API Token **KEEP IT PRIVATE!!!!**               |
+| cloudflare_zone_api_token | ChangeMe         | Cloudflare API Token **KEEP IT PRIVATE!!!!**              |
 | zoneid                    | ChangeMe         | Cloudflare's Zone ID                                      |
 | proxied                   | false            | Use Cloudflare proxy on dns record true/false             |
 | ttl                       | 120              | 120-7200 in seconds or 1 for Auto                         |
+| comment                   | ddns             | comment for dns record                                    |
 
 ### Optional Notifications Parameters for Telegram
 
@@ -54,6 +55,8 @@ Update the config parameters inside the update-cloudflare-dns_conf.ps1 by editin
 | telegram_chat_id       | ChangeMe    | Chat ID of the bot                |
 | telegram_bot_API_Token | ChangeMe    | Telegram's Bot API Token          |
 
+To generate a Telegram Bot, chat with the [@BotFather](https://t.me/@BotFather). 
+
 ### Optional Notification Parameters for Discord
 
 | **Option**             | **Example**                  | **Description**                               |
@@ -62,6 +65,14 @@ Update the config parameters inside the update-cloudflare-dns_conf.ps1 by editin
 | discord_webhook_URL    | http://WebhookURL.com/asd/   | Webhook URL from your Discord server settings |
 
 To generate a webhook URL, follow the [official Discord instructions](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks). 
+
+### Optional Notification Parameters with Proxy
+
+| **Option**             | **Example**                  | **Description**                               |
+| ---------------------- | ---------------------------- | --------------------------------------------- |
+| notify_with_proxy      | yes                          | Notifications with Proxy yes/no               |
+| notify_proxy_URL       | http://127.0.0.1:8080        | HTTP Proxy URL                                |
+
 ## Running The Script
 
 Open cmd/powershell
@@ -69,7 +80,7 @@ Open cmd/powershell
 Example:
 
 ```bash
-powershell.exe -ExecutionPolicy Bypass -File C:\DDNS-Cloudflare-PowerShell\update-cloudflare-dns.ps1
+powershell.exe -ExecutionPolicy Bypass -File "C:\DDNS-Cloudflare-PowerShell\update-cloudflare-dns.ps1"
 ```
 
 ## Automation With Windows Task Scheduler
@@ -92,8 +103,8 @@ Run at boot with 1 min delay and repeat every 1 min
 - **Actions**
   - New...
   - Action: Start a Program
-  - Program/script: _C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe_
-  - Add arguments: _-ExecutionPolicy Bypass -File C:\DDNS-Cloudflare-PowerShell\update-cloudflare-dns.ps1_
+  - Program/script: `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`
+  - Add arguments: `-ExecutionPolicy Bypass -File "C:\DDNS-Cloudflare-PowerShell\update-cloudflare-dns.ps1"`
   - ok
   - Enter your user's password when prompted
 - **Conditions**
@@ -101,13 +112,13 @@ Run at boot with 1 min delay and repeat every 1 min
 
 ## Logs
 
-This Script will create a log file with **only** the last run information  
-Log file will be located as same directory as _update-cloudflare-dns.ps1_
+This Script will create log files  
+Log files will be located at `logs` directory under the directory of `update-cloudflare-dns.ps1`
 
 Log file name:
 
 ```bash
-update-cloudflare-dns.log
+$FileName = "update-cloudflare-dns_$DAY.log"
 ```
 
 ## Limitations
