@@ -7,6 +7,7 @@ $FileName = "update-cloudflare-dns_$DAY.log"
 $File_LOG = "$FilePath\$FileName"
 
 if (!(Test-Path $File_LOG)) {
+  New-Item -ItemType Directory -Path $FilePath | Out-Null
   New-Item -ItemType File -Path $FilePath -Name ($FileName) | Out-Null
 }
 
