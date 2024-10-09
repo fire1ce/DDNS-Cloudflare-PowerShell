@@ -54,6 +54,8 @@ Update the config parameters inside the update-cloudflare-dns_conf.ps1 by editin
 | telegram_chat_id       | ChangeMe    | Chat ID of the bot                |
 | telegram_bot_API_Token | ChangeMe    | Telegram's Bot API Token          |
 
+To find the telegram_chat_id try to use https://t.me/myidbot
+
 ### Optional Notification Parameters for Discord
 
 | **Option**             | **Example**                  | **Description**                               |
