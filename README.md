@@ -4,6 +4,7 @@
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://mit-license.org/)
 
 - DDNS Cloudflare PowerShell script for **Windows**.
+- Supports IPv4 and IPv6.
 - Choose any source IP address to update **external** or **internal** _(WAN/LAN)_.
 - For multiple LAN interfaces like Wifi, Docker Networks and Bridges the script will automatically detect the primary Interface by priority.
 - Cloudflare's options for proxy and TTL configurable via the parameters.
@@ -39,13 +40,22 @@ Update the config parameters inside the update-cloudflare-dns_conf.ps1 by editin
 
 | **Option**                | **Example**      | **Description**                                           |
 | ------------------------- | ---------------- | --------------------------------------------------------- |
-| what_ip                   | internal         | Which IP should be used for the record: internal/external |
-| dns_record                | ddns.example.com | DNS **A** record which will be updated                    |
+| ip_version                | v4               | update IPv4 or IPv6 or Both: v4/v6/all                    |
+| what_ip_v4                | internal         | Which IP should be used for the record: internal/external |
+| dns_record_v4             | ddns.example.com | DNS **A** record which will be updated                    |
+| proxied_v4                | false            | Use Cloudflare proxy on dns record true/false             |
+| ttl_v4                    | 60               | 60-7200 in seconds or 1 for Auto                          |
+| comment_v4                | ddns             | comment for dns record                                    |
+| what_ip_v6                | internal         | Which IP should be used for the record: internal/external |
+| dns_record_v6             | ddns.example.com | DNS **AAAA** record which will be updated                 |
+| proxied_v6                | false            | Use Cloudflare proxy on dns record true/false             |
+| ttl_v6                    | 60               | 60-7200 in seconds or 1 for Auto                          |
+| comment_v6                | ddns             | comment for dns record                                    |
+
+| **Option**                | **Example**      | **Description**                                           |
+| ------------------------- | ---------------- | --------------------------------------------------------- |
 | cloudflare_zone_api_token | ChangeMe         | Cloudflare API Token **KEEP IT PRIVATE!!!!**              |
 | zoneid                    | ChangeMe         | Cloudflare's Zone ID                                      |
-| proxied                   | false            | Use Cloudflare proxy on dns record true/false             |
-| ttl                       | 120              | 120-7200 in seconds or 1 for Auto                         |
-| comment                   | ddns             | comment for dns record                                    |
 
 ### Optional Notifications Parameters for Telegram
 
@@ -80,7 +90,7 @@ Open cmd/powershell
 Example:
 
 ```bash
-powershell.exe -ExecutionPolicy Bypass -File "C:\DDNS-Cloudflare-PowerShell\update-cloudflare-dns.ps1"
+powershell.exe -File "C:\DDNS-Cloudflare-PowerShell\update-cloudflare-dns.ps1"
 ```
 
 ## Automation With Windows Task Scheduler
@@ -104,7 +114,7 @@ Run at boot with 1 min delay and repeat every 1 min
   - New...
   - Action: Start a Program
   - Program/script: `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`
-  - Add arguments: `-ExecutionPolicy Bypass -File "C:\DDNS-Cloudflare-PowerShell\update-cloudflare-dns.ps1"`
+  - Add arguments: `-File "C:\DDNS-Cloudflare-PowerShell\update-cloudflare-dns.ps1"`
   - ok
   - Enter your user's password when prompted
 - **Conditions**
@@ -120,10 +130,6 @@ Log file name:
 ```bash
 $FileName = "update-cloudflare-dns_$DAY.log"
 ```
-
-## Limitations
-
-- Does not support IPv6
 
 ## License
 
