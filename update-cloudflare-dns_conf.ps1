@@ -1,31 +1,27 @@
-##### Config
+﻿##### Config
 
-## update IPv4 or IPv6 or Both (v4/v6/all)
-$ip_version = "v4"
-
-## Which IP should be used for the record: internal/external
-## Internal interface will be chosen automaticly as a primary default interface
-$what_ip_v4 = "internal"
-## DNS A/AAAA record to be updated
-$dns_record_v4 = "ChangeMe"
-## 60-7200 in seconds or 1 for Auto
-$ttl_v4 = 60
-## DNS record comment
-$comment_v4 = ""
-## Use Cloudflare proxy on dns record true/false
-$proxied_v4 = $false
-
-## Which IP should be used for the record: internal/external
-## Internal interface will be chosen automaticly as a primary default interface
-$what_ip_v6 = "internal"
-## DNS A/AAAA record to be updated
-$dns_record_v6 = "ChangeMe"
-## 60-7200 in seconds or 1 for Auto
-$ttl_v6 = 60
-## DNS record comment
-$comment_v6 = ""
-## Use Cloudflare proxy on dns record true/false
-$proxied_v6 = $false
+## DNS records to be updated
+$records = @(
+    @{
+        type       = "A"
+        what_ip    = "internal"
+        dns_record = "ddns.example.com"
+        ttl        = 60
+        comment    = ""
+        proxied    = $false
+    }
+    <# Comment out the following line to disable IPv6 support
+    ,
+    @{
+        type       = "AAAA"
+        what_ip    = "internal"
+        dns_record = "ddns.example.com"
+        ttl        = 60
+        comment    = ""
+        proxied    = $false
+    }
+    #>
+)
 
 ## Cloudflare's Zone ID
 $zoneid = "ChangeMe"
